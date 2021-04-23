@@ -1,29 +1,28 @@
 package com.henriquedemetrio.cursomc.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.henriquedemetrio.cursomc.domain.Categoria;
+import com.henriquedemetrio.cursomc.services.CategoriaService;
 
 @RestController
 @RequestMapping(value="/categorias") //end-point
 public class CategoriaResource {
+	
+	@Autowired
+	private CategoriaService service;
 
-	@RequestMapping(method=RequestMethod.GET)//obtendo um dado
-	public List<Categoria> listar() {
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)//obtendo um dado
+	public ResponseEntity<?> find(@PathVariable Integer id) {
+		Categoria obj = service.buscar(id);
+		return ResponseEntity.ok().body(obj);
 		
-		Categoria cat = new Categoria (1, "Informatica");
-		Categoria cat2 = new Categoria (2, "Escritorio");
-		
-		List<Categoria> lista = new ArrayList<>(); // List e uma interface e nao pode ser importado , logo temos que achar uma classe que implemente a minha classa.
-		lista.add(cat);
-		lista.add(cat2);
-		
-		return lista;
+	
 		
 		
 	}

@@ -1,11 +1,14 @@
 package com.henriquedemetrio.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Categoria implements Serializable {
@@ -15,6 +18,9 @@ public class Categoria implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id; //chave primaria do banco de dados
 	private String nome;
+	
+	@ManyToMany(mappedBy="categorias") //realcionamento (mapeamento)
+	private List<Produto> produtos = new ArrayList<>();
 	
 	public Categoria() {
 		
@@ -42,7 +48,13 @@ public class Categoria implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
+	public List<Produto> getProdutos() {
+		// TODO Auto-generated method stub
+		return produtos;
+	}
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -67,6 +79,8 @@ public class Categoria implements Serializable {
 			return false;
 		return true;
 	}
+
+
 	
 	
 }

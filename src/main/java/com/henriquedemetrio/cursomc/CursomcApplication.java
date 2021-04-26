@@ -13,6 +13,7 @@ import com.henriquedemetrio.cursomc.domain.Cidade;
 import com.henriquedemetrio.cursomc.domain.Cliente;
 import com.henriquedemetrio.cursomc.domain.Endereco;
 import com.henriquedemetrio.cursomc.domain.Estado;
+import com.henriquedemetrio.cursomc.domain.ItemPedido;
 import com.henriquedemetrio.cursomc.domain.Pagamento;
 import com.henriquedemetrio.cursomc.domain.PagamentoBoleto;
 import com.henriquedemetrio.cursomc.domain.PagamentoCartao;
@@ -25,6 +26,7 @@ import com.henriquedemetrio.cursomc.repositories.CidadeRepository;
 import com.henriquedemetrio.cursomc.repositories.ClienteRepository;
 import com.henriquedemetrio.cursomc.repositories.EnderecoRepository;
 import com.henriquedemetrio.cursomc.repositories.EstadoRepository;
+import com.henriquedemetrio.cursomc.repositories.ItemPedidoRepository;
 import com.henriquedemetrio.cursomc.repositories.PagamentoRepository;
 import com.henriquedemetrio.cursomc.repositories.PedidoRepository;
 import com.henriquedemetrio.cursomc.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -130,6 +135,20 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	 
 	 pedidoRepository.saveAll(Arrays.asList(ped1,ped2)); //banco de dados onde sera registrado os pedidos . Primeiro e gerado o pedido pra depois pagar.
 	 pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2)); //banco de dados onde sera registrado os pagamento
+	//associando todos
+	 ItemPedido ip1 = new ItemPedido(ped1,p1, 0.00, 1 , 2000.00);
+	 ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 1 , 80.00);
+	 ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1 , 800.00); // primeiro instancia o objeto do tipo ItemPedido, verificamos a classe que ele faz referencia, e verificamos o pedido , produto, desconto, quantidade e preco
+	 
+	 ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+	 ped2.getItens().addAll(Arrays.asList(ip3));
+	 
+	 p1.getItens().addAll(Arrays.asList(ip1));
+	 p2.getItens().addAll(Arrays.asList(ip3));
+	 p3.getItens().addAll(Arrays.asList(ip2));
+	 
+	 itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
+	 
 	} 
 
 }

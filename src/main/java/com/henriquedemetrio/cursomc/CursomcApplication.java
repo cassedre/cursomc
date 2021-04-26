@@ -9,9 +9,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.henriquedemetrio.cursomc.domain.Categoria;
 import com.henriquedemetrio.cursomc.domain.Cidade;
+import com.henriquedemetrio.cursomc.domain.Cliente;
+import com.henriquedemetrio.cursomc.domain.Endereco;
 import com.henriquedemetrio.cursomc.domain.Estado;
 import com.henriquedemetrio.cursomc.domain.Produto;
+import com.henriquedemetrio.cursomc.domain.enums.TipoCliente;
 import com.henriquedemetrio.cursomc.repositories.CategoriaRepository;
+import com.henriquedemetrio.cursomc.repositories.CidadeRepository;
+import com.henriquedemetrio.cursomc.repositories.ClienteRepository;
+import com.henriquedemetrio.cursomc.repositories.EnderecoRepository;
+import com.henriquedemetrio.cursomc.repositories.EstadoRepository;
 import com.henriquedemetrio.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -22,6 +29,19 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	
 	@Autowired
 	private ProdutoRepository produtoRepository; //criar automaticamente o objeto no banco de dados
+	
+	@Autowired 
+	private CidadeRepository cidadeRepository;
+	
+	@Autowired 
+	private EstadoRepository estadoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository; //dependencias instanciacao automaticas
+	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
 	}
@@ -45,6 +65,13 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	p2.getCategorias().addAll(Arrays.asList(cat1,cat2));
 	p3.getCategorias().addAll(Arrays.asList(cat1));
 	
+	 
+		// estadoRepository.save(Arrays.asList(est1,est2));
+		// cidadeRepository.save(Arrays.asList(c1,c2,c3));
+		
+		 categoriaRepository.saveAll(Arrays.asList(cat1, cat2)); // metodo saveAll , depois uma lista automatica Arrays.asList (cat1,cat2)
+		 produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
+		 
 	 Estado est1 = new Estado (null, "Minas Gerais");
 	 Estado est2 = new Estado (null, "Sao Paulo");
 	 
@@ -55,10 +82,23 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	 
 	 est1.getCidades().addAll(Arrays.asList(c1)); //acesso o objeto estado , chamo o metodo pra pegar a cidade e salvo essa cidade do estado em uma lista do tipo Array
 	 est2.getCidades().addAll(Arrays.asList(c2,c3));
+	
+	 estadoRepository.saveAll(Arrays.asList(est1,est2));
+	 cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
+	 	 
 	 
-	categoriaRepository.saveAll(Arrays.asList(cat1, cat2)); // metodo saveAll , depois uma lista automatica Arrays.asList (cat1,cat2)
-	produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
-		
+	 //primeiro instanciamos o cliente , depois acessamos sua tabela auxiliar telefone e em seguida a tabela endereco
+	 Cliente cli1 = new Cliente (null, "Maria Silva", "maria@gmail.com", "1234566667", TipoCliente.PESSOAFISICA); //null = id gerado automaticamente
+	 cli1.getTelefones().addAll(Arrays.asList("123344456","988383838")); //
+	 
+	 Endereco e1 = new Endereco (null,"Rua Flores","573","Apto 303", "Jardim", "345667", cli1 , c3); //associando o cliente e o endereco
+	 Endereco e2 = new Endereco (null,"Rua Flores","573","Apto 303", "Jardim", "345667", cli1 , c2);  //associando o cliente o nome e o endereco com acidade
+	 
+	 cli1.getEnderecos().addAll(Arrays.asList(e1,e2)); //o cliente tem que conhecer o endereco deele entao vamos isso
+	 //ordem quem dos independentes aos dependentes
+	 clienteRepository.saveAll(Arrays.asList(cli1)); //para salvar objetos no banco criamos a classe clienteRepository e depois salvamos com o comando saveAll
+	 enderecoRepository.saveAll(Arrays.asList(e1,e2));
+	 
 	}
 
 }

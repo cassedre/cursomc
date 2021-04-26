@@ -33,6 +33,9 @@ public class Endereco implements Serializable {
 	@JoinColumn(name ="cidade_id") //Foreign Key que sera gerada na tabela endereco relacionando a tabela cidade
 	private Cidade cidade;
 	
+	@JsonBackReference
+	private Pedido pedido; //-----
+	
 	public Endereco() {
 		
 }

@@ -37,6 +37,9 @@ public class Cliente implements Serializable {
 	@CollectionTable(name="TELEFONE") //tabela auxiliar para guardar os telefones
 	private Set <String> telefones = new HashSet<>(); // conjunto de string nao aceita repeticao e a classe que implementa a interface Set e a hashSet
 	
+	@OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
+	
 	public Cliente() {
 		
 		
@@ -101,6 +104,13 @@ public class Cliente implements Serializable {
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
 	}
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,4 +144,7 @@ public class Cliente implements Serializable {
 		// TODO Auto-generated method stub
 		return enderecos;
 	}
+
+
+	
 }

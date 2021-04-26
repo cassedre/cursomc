@@ -1,5 +1,6 @@
 package com.henriquedemetrio.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.henriquedemetrio.cursomc.domain.Cidade;
 import com.henriquedemetrio.cursomc.domain.Cliente;
 import com.henriquedemetrio.cursomc.domain.Endereco;
 import com.henriquedemetrio.cursomc.domain.Estado;
+import com.henriquedemetrio.cursomc.domain.Pagamento;
+import com.henriquedemetrio.cursomc.domain.PagamentoBoleto;
+import com.henriquedemetrio.cursomc.domain.PagamentoCartao;
+import com.henriquedemetrio.cursomc.domain.Pedido;
 import com.henriquedemetrio.cursomc.domain.Produto;
+import com.henriquedemetrio.cursomc.domain.enums.EstadoPagamento;
 import com.henriquedemetrio.cursomc.domain.enums.TipoCliente;
 import com.henriquedemetrio.cursomc.repositories.CategoriaRepository;
 import com.henriquedemetrio.cursomc.repositories.CidadeRepository;
 import com.henriquedemetrio.cursomc.repositories.ClienteRepository;
 import com.henriquedemetrio.cursomc.repositories.EnderecoRepository;
 import com.henriquedemetrio.cursomc.repositories.EstadoRepository;
+import com.henriquedemetrio.cursomc.repositories.PagamentoRepository;
+import com.henriquedemetrio.cursomc.repositories.PedidoRepository;
 import com.henriquedemetrio.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository; //dependencias instanciacao automaticas
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -99,6 +113,23 @@ public class CursomcApplication implements CommandLineRunner { //ele permite imp
 	 clienteRepository.saveAll(Arrays.asList(cli1)); //para salvar objetos no banco criamos a classe clienteRepository e depois salvamos com o comando saveAll
 	 enderecoRepository.saveAll(Arrays.asList(e1,e2));
 	 
-	}
+	 
+	 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	 
+	 Pedido ped1 = new Pedido (null, sdf.parse("30/09/2017 10:32"), cli1, e1); //cliente e endereco
+	 Pedido ped2 = new Pedido (null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+	 
+	 Pagamento pagto1 = new PagamentoCartao(null, EstadoPagamento.QUITADO, ped1, 6); //ENUM CLASS
+	 ped1.setPagamento(pagto1);
+	 
+	 Pagamento pagto2 = new PagamentoBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null); // data do pgto null porque ainda nao esta pago
+	 ped2.setPagamento(pagto2);
+	 
+	 cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+	 // salvando os novos objetos acima no banco de dados --->
+	 
+	 pedidoRepository.saveAll(Arrays.asList(ped1,ped2)); //banco de dados onde sera registrado os pedidos . Primeiro e gerado o pedido pra depois pagar.
+	 pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2)); //banco de dados onde sera registrado os pagamento
+	} 
 
 }

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 public class Endereco implements Serializable {
@@ -22,9 +24,9 @@ public class Endereco implements Serializable {
 	private String complemento;
 	private String bairro;
 	private String cep;
-	
+	@JsonBackReference // nao podera instanciar o cliente
 	@ManyToOne
-	@JoinColumn(name="cliente_id")
+	@JoinColumn(name="cliente_id") //chave estrangeira que vai corresponder o codigo do cliente na tabela endreco
 	private Cliente cliente; 
 	
 	@ManyToOne

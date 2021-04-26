@@ -14,9 +14,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.henriquedemetrio.cursomc.domain.enums.TipoCliente;
 
-@Entity
+@Entity //tabela
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -28,6 +29,7 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo; // internamente o tipo cliente sera armazenado como um inteiro, mas externamente sera apresentado um dado do tipo cliente (objeto)
 	
+	@JsonManagedReference 
 	@OneToMany (mappedBy="cliente") // mapeado por quem? mapeado pelo campo cliente
 	private List <Endereco> enderecos = new ArrayList<>();
 	
